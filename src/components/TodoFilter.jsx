@@ -1,7 +1,7 @@
 const TodoFilter = ({ filteredSelect, filter }) => {
   return (
     <section className="container mx-auto mt-6">
-      <div className="flex justify-center gap-5 rounded-md bg-white shadow-md py-5">
+      <div className="flex justify-center gap-5 rounded-md bg-white shadow-md py-5 dark:bg-very-dark-desaturated-blue transition-all duration-1000">
         <button
           onClick={() => filteredSelect("all")}
           className={`${
