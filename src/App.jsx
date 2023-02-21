@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 
+import { DragDropContext } from "@hello-pangea/dnd";
+
 import Header from "./components/Header";
 import TodoComputed from "./components/TodoComputed";
 import TodoCreate from "./components/TodoCreate";
 import TodoList from "./components/TodoList";
 import TodoFilter from "./components/TodoFilter";
 
-// const initialStateTodos = [
-//   { id: 1, title: "Go to the gum", completed: false },
-//   { id: 2, title: "Learn react js framework", completed: true },
-//   { id: 3, title: "Buy Chabela food", completed: false },
-//   { id: 4, title: "Get shower", completed: false },
-// ];
-
 const initialStateTodos = JSON.parse(localStorage.getItem("todos")) || [];
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 const App = () => {
   const [todos, setTodos] = useState(initialStateTodos);
@@ -62,16 +65,32 @@ const App = () => {
 
   const filteredSelect = (filter) => setFilter(filter);
 
+  const handleDragEnd = (result) => {
+    const { destination, source } = result;
+    if (!destination) return;
+    if (
+      source.index === destination.index &&
+      source.droppableId === destination.droppableId
+    )
+      return;
+
+    setTodos((prevsTasks) =>
+      reorder(prevsTasks, source.index, destination.index)
+    );
+  };
+
   return (
-    <div className="bg-white bg-[url('./assets/images/bg-mobile-light.jpg')] dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] bg-contain bg-no-repeat min-h-screen dark:bg-very-dark-blue transition-all duration-1000">
+    <div className="bg-white bg-[url('./assets/images/bg-mobile-light.jpg')] md:bg-[url('./assets/images/bg-desktop-light.jpg')] md:dark:bg-[url('./assets/images/bg-desktop-dark.jpg')] dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] bg-contain bg-no-repeat min-h-screen dark:bg-very-dark-blue transition-all duration-1000">
       <Header />
-      <main className="container mt-6 mx-auto px-4">
+      <main className="container mt-6 mx-auto px-4 md:max-w-xl">
         <TodoCreate createTodo={createTodo} />
-        <TodoList
-          removeTodo={removeTodo}
-          updateTodo={updateTodo}
-          todos={filteredTodos()}
-        />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <TodoList
+            removeTodo={removeTodo}
+            updateTodo={updateTodo}
+            todos={filteredTodos()}
+          />
+        </DragDropContext>
         <TodoComputed
           todos={todos}
           itemsLeft={itemsLeft}
@@ -79,7 +98,7 @@ const App = () => {
         />
         <TodoFilter filteredSelect={filteredSelect} filter={filter} />
       </main>
-      <p className="mt-6 text-center text-sm text-dark-grayish-blue">
+      <p className="mt-6 text-center absolute bottom-12 left-1/2 -translate-x-1/2 text-sm text-dark-grayish-blue">
         Drag and drop to reorder list
       </p>
     </div>

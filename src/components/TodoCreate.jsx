@@ -11,6 +11,7 @@ const TodoCreate = ({ createTodo }) => {
 
   return (
     <form
+      autocomplete="off"
       onSubmit={handleSubmitAddTodo}
       className="bg-white overflow-hidden my-6 flex gap-4 items-center py-5 rounded-md px-8 dark:bg-very-dark-desaturated-blue transition-all duration-1000"
     >
