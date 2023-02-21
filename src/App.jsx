@@ -98,7 +98,7 @@ const App = () => {
         />
         <TodoFilter filteredSelect={filteredSelect} filter={filter} />
       </main>
-      <p className="mt-6 text-center absolute bottom-12 left-1/2 -translate-x-1/2 text-sm text-dark-grayish-blue">
+      <p className="mt-6 text-center text-sm text-dark-grayish-blue">
         Drag and drop to reorder list
       </p>
     </div>
